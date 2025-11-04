@@ -3,4 +3,4 @@ import pandas as pd
 
 AllData = np.load(data/AllData.csv)
 
-print("TEst")
+print("Test")

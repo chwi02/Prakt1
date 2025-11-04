@@ -6,30 +6,30 @@ class bDecisionTree:
         unique, counts = np.unique(y, return_counts=True)
         N = counts/len(y)
         G = 1 - np.sum(N**2)
-        return(G)
+        return G
 
     def _bestSplit(self,X,y,feature):
         G = 1
         bestSplit = np.inf
-        XSort = np.unique(X[:,feature].round(self.xDecimals)) #*\label{code:CARTunique}
-        XDiff = (XSort[1:len(XSort)] + XSort[0:len(XSort)-1])/2 #*\label{code:CARTMittelwert}
+        XSort = np.unique(X[:,feature].round(self.xDecimals))
+        XDiff = (XSort[1:] + XSort[:-1]) / 2
         for i in range(XDiff.shape[0]):
-            index = np.less(X[:,feature], XDiff[i])
+            index = X[:,feature] < XDiff[i]
             G1 = self._calGiniImpurity(y[index])
             G2 = self._calGiniImpurity(y[~index])
-            GSplit = len(y[index])/len(y)*G1 + len(y[~index])/len(y)*G2 #*\label{code:CARTGewichtung}
+            GSplit = np.mean(index)*G1 + np.mean(~index)*G2
             if G > GSplit:
                 G = GSplit
                 bestSplit = XDiff[i]
-        return (bestSplit, G)
+        return bestSplit, G
 
     def _chooseFeature(self,X,y):
         G         = np.zeros(X.shape[1])
         bestSplit = np.zeros(X.shape[1])
         for i in range(X.shape[1]):
-            ( bestSplit[i] , G[i] ) = self._bestSplit(X,y,i) 
-        smallest = np.argmin(G) #*\label{code:CARTargmin}
-        return (G[smallest], bestSplit[smallest],smallest)
+            ( bestSplit[i] , G[i] ) = self._bestSplit(X,y,i)
+        smallest = np.argmin(G)
+        return G[smallest], bestSplit[smallest], smallest
 
     def _ComputeValue(self,y):
         unique, counts = np.unique(y, return_counts=True)
@@ -45,34 +45,33 @@ class bDecisionTree:
     def _GenTree(self,X,y,parentNode,branch):
         commonValue = self._ComputeValue(y)
         initG = self._calGiniImpurity(y)
-        if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize: #*\label{code:CART-B1Start}
+        if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize:
             self.bTree.addNode(parentNode,branch,commonValue)
-            return()    #*\label{code:CART-B1End}
-
+            return
+            
+        (G, bestSplit ,chooseA) = self._chooseFeature(X,y)
+        if G > 0.98*initG:
+            self.bTree.addNode(parentNode,branch,commonValue)
+            return
+        
         if parentNode == None: 
             self.bTree = tree(chooseA, bestSplit, '<')
             myNo = 0
         else: 
             myNo = self.bTree.addNode(parentNode,branch,bestSplit,operator='<',varNo=chooseA)
-            
-        (G, bestSplit ,chooseA) = self._chooseFeature(X,y)
-        if  G  > 0.98*initG :  #*\label{code:CART-B2Start}
-            self.bTree.addNode(parentNode,branch,commonValue)
-            return()    #*\label{code:CART-B2End}
-        
 
-        index = np.less(X[:,chooseA],bestSplit) #*\label{code:CART-AufteilenStart}
+        index = np.less(X[:,chooseA],bestSplit)
         XTrue  = X[index,:] 
         yTrue  = y[index]
         XFalse = X[~index,:]
-        yFalse = y[~index] #*\label{code:CART-AufteilenEnd}
+        yFalse = y[~index]
                 
-        if XTrue.shape[0] > self.minLeafNodeSize: #*\label{code:CART-B3True}
+        if XTrue.shape[0] > self.minLeafNodeSize:
             self._GenTree(XTrue,yTrue,myNo,True)
         else:
             commonValue = self._ComputeValue(yTrue)
             self.bTree.addNode(myNo,True,commonValue)
-        if XFalse.shape[0] > self.minLeafNodeSize: #*\label{code:CART-B3False}
+        if XFalse.shape[0] > self.minLeafNodeSize:
             self._GenTree(XFalse,yFalse,myNo,False)
         else:
             commonValue = self._ComputeValue(yFalse)
@@ -95,7 +94,7 @@ class bDecisionTree:
         return(self.bTree.numberOfLeafs())
         
 if __name__ == '__main__':        
-    dataset = np.loadtxt("data/AllData.csv", delimiter=",")
+    dataset = np.loadtxt("data/Trainingsset.csv", delimiter=",")
 
     np.random.seed(42)
     MainSet = np.arange(0,dataset.shape[0])
@@ -106,7 +105,7 @@ if __name__ == '__main__':
     XTest = dataset[Testset,0:4]
     yTest = dataset[Testset,4]
     
-    myTree = bDecisionTree(xDecimals=5,threshold=0.1,minLeafNodeSize=5)
+    myTree = bDecisionTree(minLeafNodeSize=5)
     myTree.fit(XTrain,yTrain)
     
     yPredict = myTree.predict(XTest)
