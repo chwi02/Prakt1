@@ -36,7 +36,7 @@ class bDecisionTree:
         i = np.argmax(counts)
         return(unique[i])
 
-    def __init__(self,threshold = 0.1, xDecimals = 8, minLeafNodeSize=3):
+    def __init__(self,threshold = 0.1, xDecimals = 5, minLeafNodeSize=3):     ###### TODO: optimise minLeafNodeSize
         self.bTree = None
         self.threshold = threshold
         self.xDecimals = xDecimals
@@ -95,18 +95,23 @@ class bDecisionTree:
         
 if __name__ == '__main__':        
     dataset = np.loadtxt("data/Trainingsset.csv", delimiter=",")
+    testset = np.loadtxt("data/Testset.csv", delimiter=",")
+    allData = np.loadtxt("data/AllData.csv", delimiter=",")
 
     np.random.seed(42)
     MainSet = np.arange(0,dataset.shape[0])
-    Trainingsset = np.random.choice(dataset.shape[0], 120, replace=False)
-    Testset = np.delete(MainSet,Trainingsset)
-    XTrain = dataset[Trainingsset,0:4]
-    yTrain = dataset[Trainingsset,4]
-    XTest = dataset[Testset,0:4]
-    yTest = dataset[Testset,4]
+    #Trainingsset = np.random.choice(dataset.shape[0], 120, replace=False)
+    #Testset = np.delete(MainSet,Trainingsset)
+    XTrain = dataset[:, 1:]
+    yTrain = dataset[: ,0]
+    XTest = testset[:, 1:]
+    yTest = testset[: ,0]
     
     myTree = bDecisionTree(minLeafNodeSize=5)
     myTree.fit(XTrain,yTrain)
+    y = myTree.predict(XTest)
+    #print('Fehler %e' % Fehler)
+
     
-    yPredict = myTree.predict(XTest)
-    print(yPredict - yTest)
+    #yPredict = myTree.predict(XTest)
+    #print(yPredict - yTest)
