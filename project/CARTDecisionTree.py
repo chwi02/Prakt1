@@ -1,5 +1,5 @@
 import numpy as np
-from binaryTree import tree 
+from project.binaryTree import tree 
 import matplotlib.pyplot as plt
 
 class bDecisionTree:

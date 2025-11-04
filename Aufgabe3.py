@@ -20,10 +20,11 @@ for i in range(1,51):
     err.append(np.sum(y_test!=Y_test))
 
 err=np.array((np.arange(1,51),err))
-print(err)
+#print(err)
 
 plt.plot(err[0], err[1])
-plt.xlabel('Baeume')           # Beschriftung der X-Achse
-plt.ylabel('Fehler')           # Beschriftung der Y-Achse
-plt.title('Fehlerverlauf')      # Titel des Diagramms
-plt.savefig('aufgabe3.png')
+plt.xlabel('Baeume')           
+plt.ylabel('Fehler')           
+plt.title('Fehlerverlauf')      
+pdf_path = "outputs/aufgabe3.png"
+plt.savefig(pdf_path, format='png', bbox_inches= "tight")
