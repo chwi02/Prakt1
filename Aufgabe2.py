@@ -2,12 +2,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PyPDF2 import PdfReader, PdfWriter
 
-from project.binaryTree import tree 
-from project.CARTDecisionTree import XTrain, XTest, yTrain, yTest, bDecisionTree
+from project.CARTDecisionTree import bDecisionTree
 
+dataset = np.loadtxt("data/Trainingsset.csv", delimiter=",")
+testset = np.loadtxt("data/Testset.csv", delimiter=",")
+allData = np.loadtxt("data/AllData.csv", delimiter=",")
 
-
-
+XTrain = dataset[:, 1:]
+yTrain = dataset[: ,0]
+XTest = testset[:, 1:]
+yTest = testset[: ,0]
+"""
+for i in range(1,50):
+    myTree = bDecisionTree(minLeafNodeSize=i)
+    myTree.fit(XTrain,yTrain)
+    y = myTree.predict(XTest)
+    Fehler=np.sum(y!=yTest)
+    print('leafs '+str(i)+' :Fehler %e' % Fehler)
+"""
 
 XTrain_f=XTrain[:,[0,6]]
 XTest_f=XTest[:,[0,6]]
@@ -19,11 +31,15 @@ for i in range(1,50):
     Fehler=np.sum(y!=yTest)
     print('leafs '+str(i)+' :Fehler %e' % Fehler)
 """
+
 myTree = bDecisionTree(minLeafNodeSize=3)
 myTree.fit(XTrain_f,yTrain)
 y = myTree.predict(XTest_f)
 
 """
+# Eigentliche skallierung ergibt keinen Sinn, da Werte in XTest größer sein können als XTrain 
+# und somit ausherhalb des Wertebereichs liegen würden
+
 XX, YY = np.mgrid[
     XTrain_f[:,0].min():XTrain_f[:,0].max():0.005,
     XTrain_f[:,1].min():XTrain_f[:,1].max():0.005
@@ -31,8 +47,7 @@ XX, YY = np.mgrid[
 X = np.array([XX.ravel(), YY.ravel()]).T
 Z = myTree.predict(X).reshape(XX.shape)
 """
-
-XX, YY = np.mgrid[
+XX, YY = np.mgrid[      # Wertebereich auf den in der Aufgabe gegebenen angepasst
     11:15:0.02,
     0:6:0.02      
 ]
@@ -63,12 +78,11 @@ ax_text.text(0.5, 0.5, "Hier steht der Text unter dem Graphen.",
 plt.savefig('outputs/pcolormesh.pdf')
 #plt.show()
 
-output = PdfWriter()
-pdfOne = PdfReader(open("outputs/scatterplots.pdf", "rb"))
-pdfTwo = PdfReader(open("outputs/pcolormesh.pdf", "rb"))
-
-output.add_page(pdfOne.pages[0])
-output.add_page(pdfTwo.pages[0])
-
-with open("outputs/plots.pdf", "wb") as outputStream:
-    output.write(outputStream)
+with open("outputs/scatterplots.pdf", "rb") as f1, open("outputs/pcolormesh.pdf", "rb") as f2:
+    pdfOne = PdfReader(f1)
+    pdfTwo = PdfReader(f2)
+    output = PdfWriter()
+    output.add_page(pdfOne.pages[0])
+    output.add_page(pdfTwo.pages[0])
+    with open("outputs/plots.pdf", "wb") as out:
+        output.write(out)
