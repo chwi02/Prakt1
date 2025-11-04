@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from PyPDF2 import PdfReader, PdfWriter
 
 from project.binaryTree import tree 
-from project.CARTDecisionTree import XTrain, XTest, yTrain
+from project.CARTDecisionTree import XTrain, XTest, yTrain, yTest, bDecisionTree
 
 
 
