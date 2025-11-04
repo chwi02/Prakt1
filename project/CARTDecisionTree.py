@@ -1,5 +1,6 @@
 import numpy as np
 from binaryTree import tree 
+import matplotlib.pyplot as plt
 
 class bDecisionTree:
     def _calGiniImpurity(self,y):
@@ -106,12 +107,23 @@ if __name__ == '__main__':
     yTrain = dataset[: ,0]
     XTest = testset[:, 1:]
     yTest = testset[: ,0]
+    """
+    for i in range(1,50):
+        myTree = bDecisionTree(minLeafNodeSize=i)
+        myTree.fit(XTrain,yTrain)
+        y = myTree.predict(XTest)
+        Fehler=np.sum(y!=yTest)
+        print('leafs '+str(i)+' :Fehler %e' % Fehler)
+    """
     
-    myTree = bDecisionTree(minLeafNodeSize=5)
-    myTree.fit(XTrain,yTrain)
-    y = myTree.predict(XTest)
-    #print('Fehler %e' % Fehler)
 
-    
-    #yPredict = myTree.predict(XTest)
-    #print(yPredict - yTest)
+#######1.2
+
+    XTrain_f=XTrain[:,[0,6]]
+    XTest_f=XTest[:,[0,6]]
+    for i in range(1,50):
+        myTree = bDecisionTree(minLeafNodeSize=i)
+        myTree.fit(XTrain_f,yTrain)
+        y = myTree.predict(XTest_f)
+        Fehler=np.sum(y!=yTest)
+        print('leafs '+str(i)+' :Fehler %e' % Fehler)
