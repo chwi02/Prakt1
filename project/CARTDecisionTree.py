@@ -48,17 +48,18 @@ class bDecisionTree:
         if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize: #*\label{code:CART-B1Start}
             self.bTree.addNode(parentNode,branch,commonValue)
             return()    #*\label{code:CART-B1End}
+
+        if parentNode == None: 
+            self.bTree = tree(chooseA, bestSplit, '<')
+            myNo = 0
+        else: 
+            myNo = self.bTree.addNode(parentNode,branch,bestSplit,operator='<',varNo=chooseA)
             
         (G, bestSplit ,chooseA) = self._chooseFeature(X,y)
         if  G  > 0.98*initG :  #*\label{code:CART-B2Start}
             self.bTree.addNode(parentNode,branch,commonValue)
             return()    #*\label{code:CART-B2End}
         
-        if parentNode == None: 
-            self.bTree = tree(chooseA, bestSplit, '<')
-            myNo = 0
-        else: 
-            myNo = self.bTree.addNode(parentNode,branch,bestSplit,operator='<',varNo=chooseA)
 
         index = np.less(X[:,chooseA],bestSplit) #*\label{code:CART-AufteilenStart}
         XTrue  = X[index,:] 
