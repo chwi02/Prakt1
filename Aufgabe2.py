@@ -63,6 +63,9 @@ figsize=(8.27, 11.69),
 gridspec_kw={'height_ratios': [5, 1]}  # Verhältnis Plot zu Text
 )
 
+fig.suptitle("Aufgabe 2", fontsize=16)      # Warum funktioniert dies nicht?
+
+
 ax_plot.pcolormesh(XX, YY, Z, cmap=plt.cm.Set1, shading='auto')
 ax_plot.scatter(XTest[:,[0]], XTest[:,[6]] , c=yTest, s=60, alpha=0.6)
 ax_plot.set_xlabel("Feature 1 (Alcohol)")
@@ -71,7 +74,7 @@ ax_plot.set_title("pcolormesh-Graph")
 
 # Text hinzufügen
 ax_text.axis("off")
-ax_text.text(0.5, 0.5, "Hier steht der Text unter dem Graphen.",
+ax_text.text(0.5, 0.5, "Mit dem bloßen Auge sind 4 Falsch klassifizierte Werte erkennbar. Die in Aufgabe 1 festegsgestellten Fehler lassen sich in diesem Plot bestätigen.",
             ha="center", va="center", fontsize=12)
 
 
