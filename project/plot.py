@@ -5,7 +5,9 @@ def gen_plot():
     AllData = pd.read_csv("data/AllData.csv")
 
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+    fig.suptitle("Aufgabe 1", fontsize=16)
     axes = axes.ravel()
+
 
     # Plot 1 – rot
     axes[0].scatter(AllData.iloc[:, 8], AllData.iloc[:, 13], c='red', s=60, alpha=0.6)
@@ -36,9 +38,9 @@ def gen_plot():
         ax.grid(True, linestyle='--', color='0.75')
 
     plt.tight_layout()
-    fig.text(0.1,-0.15,"""Datensatz 3 mit den Merkmalen 'Alcohol' und 'Flavanoids' ist aus unserer Sicht am besten geeignet.\n 
-    Es sind deutliche horizontale und vertikale Abgrenzungen erkennbar, anders wie bei den anderen Datensätzen.\n
-    MinLeafNodeSize=3, Änderungen bis 20 haben nichts bewirkt.
+    fig.text(0.1,-0.15,"""Auf Grund der klar erkennbaren Punktwolken in Datensatz 3 halten wir diese Merkmale für besonders geignet.\n
+             Die anderen Merkmale lassen sich mit einem CART-Algorithmus schwer klassifizieren.\n
+             Anpassungen von MinLeafNodeSize zwischen 3 und 20 änderten das Ergebnis nicht wesentlich.
                         """)
     pdf_path = "outputs/scatterplots.pdf"
     plt.savefig(pdf_path, format='pdf', bbox_inches= "tight")

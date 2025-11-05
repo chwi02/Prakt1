@@ -2,7 +2,7 @@ from project.Aufgabe1_prep import rerun
 import pickle
 import numpy as np
 
-rerun_appl=False
+rerun_appl=False # Bei Erstgenerierung der Pdf und des Pickle Objekts => rerun_appl=True 
 
 testset = np.loadtxt("data/Testset.csv", delimiter=",")
 XTest = testset[:, 1:]

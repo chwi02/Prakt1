@@ -1,6 +1,10 @@
 import numpy as np
-from project.binaryTree import tree 
 import matplotlib.pyplot as plt
+from PyPDF2 import PdfReader, PdfWriter
+
+from .binaryTree import tree
+
+
 
 class bDecisionTree:
     def _calGiniImpurity(self,y):
@@ -116,14 +120,3 @@ if __name__ == '__main__':
         print('leafs '+str(i)+' :Fehler %e' % Fehler)
     """
     
-
-#######1.2
-
-    XTrain_f=XTrain[:,[0,6]]
-    XTest_f=XTest[:,[0,6]]
-    for i in range(1,50):
-        myTree = bDecisionTree(minLeafNodeSize=i)
-        myTree.fit(XTrain_f,yTrain)
-        y = myTree.predict(XTest_f)
-        Fehler=np.sum(y!=yTest)
-        print('leafs '+str(i)+' :Fehler %e' % Fehler)
