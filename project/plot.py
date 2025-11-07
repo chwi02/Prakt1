@@ -10,13 +10,15 @@ def gen_plot():
 
 
     # Plot 1 – rot
-    axes[0].scatter(AllData.iloc[:, 8], AllData.iloc[:, 13], c='red', s=60, alpha=0.6)
+    axes[0].scatter(AllData.iloc[:, 8], AllData.iloc[:, 13], s=60, alpha=0.6)
     axes[0].set_title("Datensatz 1")
     axes[0].set_xlabel("Non flavanoid phenols")
     axes[0].set_ylabel("Proline")
+    axes[0].legend(loc="upper left")
+
 
     # Plot 2 – grün
-    axes[1].scatter(AllData.iloc[:, 7], AllData.iloc[:, 10], c='green', marker='^', s=60, alpha=0.6)
+    axes[1].scatter(AllData.iloc[:, 7], AllData.iloc[:, 10], c='red', marker='^', s=60, alpha=0.6)
     axes[1].set_title("Datensatz 2")
     axes[1].set_xlabel("Flavanoids")
     axes[1].set_ylabel("Color Intensity")
