@@ -1,0 +1,11 @@
+name: prakt1
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - matplotlib
+  - scikit-learn
+  - pandas
+  - pypdf2
+prefix: /home/christian-wiggers/miniconda3/envs/prakt1
