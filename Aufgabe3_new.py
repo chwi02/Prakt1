@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class randomForestKlassifikation:
-    def __init__(self,noOfTrees=10,threshold = 10**-8, xDecimals = 8, minLeafNodeSize=3, perc=1.0, random_state=None):
+    def __init__(self,noOfTrees=10,threshold = 0.1, xDecimals = 8, minLeafNodeSize=3, perc=1.0, random_state=None):
         self.perc = perc
         self.threshold = threshold
         self.xDecimals = xDecimals
@@ -74,11 +74,4 @@ if __name__ == '__main__':
     #plt.grid(True)
     #plt.savefig('outputs/aufgabe3.pdf')
     #plt.show() 
-
-
-    myForest = randomForestKlassifikation(noOfTrees=24,minLeafNodeSize=5,threshold=0.1) #randomForestRegression
-    myForest.fit(X,Y)
-    yPredict = np.round(myForest.predict(X_test))
-    yDiff = yPredict - Y_test
-    print('Mittlere Abweichung: %e ' % (np.mean(np.abs(yDiff))))
                 
