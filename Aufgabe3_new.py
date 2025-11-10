@@ -76,7 +76,7 @@ if __name__ == '__main__':
     #plt.show() 
 
 
-    myForest = randomForestKlassifikation(noOfTrees=24,minLeafNodeSize=5,threshold=2) #randomForestRegression
+    myForest = randomForestKlassifikation(noOfTrees=24,minLeafNodeSize=5,threshold=0.1) #randomForestRegression
     myForest.fit(X,Y)
     yPredict = np.round(myForest.predict(X_test))
     yDiff = yPredict - Y_test

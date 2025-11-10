@@ -47,109 +47,108 @@ class bRegressionTree:
         self.xDecimals = xDecimals
         self.minLeafNodeSize = minLeafNodeSize
 
-    #def _GenTree(self,X,y,parentNode,branch):
-    #    commonValue = self._ComputeValue(y)
-    #    initG = self._calLRSS(y)
-    #    if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize: 
-    #        self.bTree.addNode(parentNode,branch,commonValue)
-    #        return()  
-
-    #    if initG < self.threshold or X.shape[0] <= self.minLeafNodeSize:
-    #        if parentNode is None:
-    #            # Wenn wir sofort stoppen, aber noch keinen Baum haben:
-    #            self.bTree = tree(0, commonValue, '<')
-    #        else:
-    #            self.bTree.addNode(parentNode, branch, commonValue)
-    #        return
-#
-    #    (G, bestSplit ,chooseA) = self._chooseFeature(X,y)
-    #    if  G  > initG : 
-    #        self.bTree.addNode(parentNode,branch,commonValue)
-    #        return()    
-    #    
-    #    if parentNode == None: 
-    #        self.bTree = tree(chooseA, bestSplit, '<')
-    #        myNo = 0
-    #    else: 
-    #        myNo = self.bTree.addNode(parentNode,branch,bestSplit,operator='<',varNo=chooseA)
-#
-    #    index = np.less(X[:,chooseA],bestSplit)
-    #    XTrue  = X[index,:] 
-    #    yTrue  = y[index]
-    #    XFalse = X[~index,:]
-    #    yFalse = y[~index] 
-    #            
-    #    if XTrue.shape[0] > self.minLeafNodeSize: 
-    #        self._GenTree(XTrue,yTrue,myNo,True)
-    #    else:
-    #        commonValue = self._ComputeValue(yTrue)  
-    #        self.bTree.addNode(myNo,True,commonValue)
-    #    if XFalse.shape[0] > self.minLeafNodeSize:
-    #        self._GenTree(XFalse,yFalse,myNo,False)
-    #    else:
-    #        commonValue = self._ComputeValue(yFalse)
-    #        self.bTree.addNode(myNo,False,commonValue)
-    #    return()
-
-    def _GenTree(self, X, y, parentNode, branch):
-    # Sicherstellen, dass der Baum existiert
-        if self.bTree is None and parentNode is None:
-            from .binaryTree import tree
-            self.bTree = tree(0, None, '<')
-    
+    def _GenTree(self,X,y,parentNode,branch):
         commonValue = self._ComputeValue(y)
         initG = self._calLRSS(y)
-    
-        # Debug-Ausgabe
-        #print(f"DEBUG: initG={initG:.4f}, rows={X.shape[0]}, parentNode={parentNode}")
-    
-        # Abbruchkriterium – Blatt erzeugen
+        if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize: 
+            self.bTree.addNode(parentNode,branch,commonValue)
+            return()  
         if initG < self.threshold or X.shape[0] <= self.minLeafNodeSize:
             if parentNode is None:
-                # Wenn dies die Wurzel ist: erstelle Baum mit nur einem Knoten
-                from .binaryTree import tree
+                # Wenn wir sofort stoppen, aber noch keinen Baum haben:
                 self.bTree = tree(0, commonValue, '<')
             else:
-                # Wenn Baum bereits existiert, füge Blatt hinzu
                 self.bTree.addNode(parentNode, branch, commonValue)
             return
-    
-        # Feature und Splitpunkt wählen
-        (G, bestSplit, chooseA) = self._chooseFeature(X, y)
-    
-        # Wenn keine signifikante Verbesserung → Blatt
-        if G > 0.98 * initG:
-            self.bTree.addNode(parentNode, branch, commonValue)
-            return
-    
-        # Wenn dies die Wurzel ist → Baum initialisieren
-        if parentNode is None:
-            from .binaryTree import tree
+
+        (G, bestSplit ,chooseA) = self._chooseFeature(X,y)
+        if  G  > initG : 
+            self.bTree.addNode(parentNode,branch,commonValue)
+            return()    
+        
+        if parentNode == None: 
             self.bTree = tree(chooseA, bestSplit, '<')
             myNo = 0
+        else: 
+            myNo = self.bTree.addNode(parentNode,branch,bestSplit,operator='<',varNo=chooseA)
+
+        index = np.less(X[:,chooseA],bestSplit)
+        XTrue  = X[index,:] 
+        yTrue  = y[index]
+        XFalse = X[~index,:]
+        yFalse = y[~index] 
+                
+        if XTrue.shape[0] > self.minLeafNodeSize: 
+            self._GenTree(XTrue,yTrue,myNo,True)
         else:
-            myNo = self.bTree.addNode(parentNode, branch, bestSplit, operator='<', varNo=chooseA)
-    
-        # Split-Daten berechnen
-        index = np.less(X[:, chooseA], bestSplit)
-        XTrue, yTrue = X[index, :], y[index]
-        XFalse, yFalse = X[~index, :], y[~index]
-    
-        # Rekursion für True-Branch
-        if XTrue.shape[0] > self.minLeafNodeSize:
-            self._GenTree(XTrue, yTrue, myNo, True)
-        else:
-            commonValue = self._ComputeValue(yTrue)
-            self.bTree.addNode(myNo, True, commonValue)
-    
-        # Rekursion für False-Branch
+            commonValue = self._ComputeValue(yTrue)  
+            self.bTree.addNode(myNo,True,commonValue)
         if XFalse.shape[0] > self.minLeafNodeSize:
-            self._GenTree(XFalse, yFalse, myNo, False)
+            self._GenTree(XFalse,yFalse,myNo,False)
         else:
             commonValue = self._ComputeValue(yFalse)
-            self.bTree.addNode(myNo, False, commonValue)
-    
-        return
+            self.bTree.addNode(myNo,False,commonValue)
+        return()
+
+    #def _GenTree(self, X, y, parentNode, branch):
+    ## Sicherstellen, dass der Baum existiert
+    #    if self.bTree is None and parentNode is None:
+    #        from .binaryTree import tree
+    #        self.bTree = tree(0, None, '<')
+    #
+    #    commonValue = self._ComputeValue(y)
+    #    initG = self._calLRSS(y)
+    #
+    #    # Debug-Ausgabe
+    #    #print(f"DEBUG: initG={initG:.4f}, rows={X.shape[0]}, parentNode={parentNode}")
+    #
+    #    # Abbruchkriterium – Blatt erzeugen
+    #    if initG < self.threshold or X.shape[0] <= self.minLeafNodeSize:
+    #        if parentNode is None:
+    #            # Wenn dies die Wurzel ist: erstelle Baum mit nur einem Knoten
+    #            from .binaryTree import tree
+    #            self.bTree = tree(0, commonValue, '<')
+    #        else:
+    #            # Wenn Baum bereits existiert, füge Blatt hinzu
+    #            self.bTree.addNode(parentNode, branch, commonValue)
+    #        return
+    #
+    #    # Feature und Splitpunkt wählen
+    #    (G, bestSplit, chooseA) = self._chooseFeature(X, y)
+    #
+    #    # Wenn keine signifikante Verbesserung → Blatt
+    #    if G > 0.98 * initG:
+    #        self.bTree.addNode(parentNode, branch, commonValue)
+    #        return
+    #
+    #    # Wenn dies die Wurzel ist → Baum initialisieren
+    #    if parentNode is None:
+    #        from .binaryTree import tree
+    #        self.bTree = tree(chooseA, bestSplit, '<')
+    #        myNo = 0
+    #    else:
+    #        myNo = self.bTree.addNode(parentNode, branch, bestSplit, operator='<', varNo=chooseA)
+    #
+    #    # Split-Daten berechnen
+    #    index = np.less(X[:, chooseA], bestSplit)
+    #    XTrue, yTrue = X[index, :], y[index]
+    #    XFalse, yFalse = X[~index, :], y[~index]
+    #
+    #    # Rekursion für True-Branch
+    #    if XTrue.shape[0] > self.minLeafNodeSize:
+    #        self._GenTree(XTrue, yTrue, myNo, True)
+    #    else:
+    #        commonValue = self._ComputeValue(yTrue)
+    #        self.bTree.addNode(myNo, True, commonValue)
+    #
+    #    # Rekursion für False-Branch
+    #    if XFalse.shape[0] > self.minLeafNodeSize:
+    #        self._GenTree(XFalse, yFalse, myNo, False)
+    #    else:
+    #        commonValue = self._ComputeValue(yFalse)
+    #        self.bTree.addNode(myNo, False, commonValue)
+    #
+    #    return
 
 
     def fit(self, X,y):
