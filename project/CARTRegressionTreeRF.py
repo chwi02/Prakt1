@@ -50,9 +50,18 @@ class bRegressionTree:
     def _GenTree(self,X,y,parentNode,branch):
         commonValue = self._ComputeValue(y)
         initG = self._calLRSS(y)
-        if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize: 
-            self.bTree.addNode(parentNode,branch,commonValue)
-            return()    
+        #if  initG < self.threshold or X.shape[0] <= self.minLeafNodeSize: 
+        #    self.bTree.addNode(parentNode,branch,commonValue)
+        #    return()  
+        if initG < self.threshold or X.shape[0] <= self.minLeafNodeSize:
+            if parentNode is None:
+                # Wenn wir sofort stoppen, aber noch keinen Baum haben:
+                from .binaryTree import tree
+                self.bTree = tree(0, commonValue, '<')
+            else:
+                self.bTree.addNode(parentNode, branch, commonValue)
+            return
+  
             
         (G, bestSplit ,chooseA) = self._chooseFeature(X,y)
         if  G  > initG : 
