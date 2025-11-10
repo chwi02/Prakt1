@@ -2,8 +2,6 @@ from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import matplotlib.pyplot as plt
 
- 
-
 
 train_dataset = np.loadtxt("data/Trainingsset.csv", delimiter=",")
 test_dataset = np.loadtxt("data/Testset.csv", delimiter=",")
@@ -15,7 +13,7 @@ Y_test=test_dataset[:,0]
 
 err=list()
 for i in range(1,51):
-    rf = RandomForestClassifier(n_estimators=i, random_state=42)
+    rf = RandomForestClassifier(noOfTrees=i, random_state=42)
     rf.fit(X, Y) 
     y_test=rf.predict(X_test)
     err.append(np.sum(y_test!=Y_test))
