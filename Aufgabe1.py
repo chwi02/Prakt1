@@ -11,10 +11,8 @@ yTest = testset[: ,0]
 if rerun_appl:
     rerun()
 
-
 with open('models/CART1.pkl', 'rb') as f:
     model = pickle.load(f)
-
 
 y = model.predict(XTest)
 Fehler=np.sum(y!=yTest)

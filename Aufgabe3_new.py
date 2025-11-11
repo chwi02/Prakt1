@@ -1,6 +1,5 @@
 import numpy as np 
 from project.CARTDecisionTreeRF import bDecisionTree
-from project.CARTRegressionTreeRF import bRegressionTree
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,7 +16,7 @@ class randomForestKlassifikation:
             np.random.seed(random_state)
 
         for i in range(noOfTrees):
-            tempTree = bRegressionTree(threshold = self.threshold, xDecimals = self.xDecimals , minLeafNodeSize=self.minLeafNodeSize)
+            tempTree = bDecisionTree(threshold = self.threshold, xDecimals = self.xDecimals , minLeafNodeSize=self.minLeafNodeSize)
             self.bTree.append(tempTree)
             
     def fit(self,X,y):
