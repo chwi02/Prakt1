@@ -20,7 +20,7 @@ XTrain_f=XTrain[:,[0,6]]
 XTest_f=XTest[:,[0,6]]
 
 if rerun_appl:
-    myTree = bDecisionTree(minLeafNodeSize=3)
+    myTree = bDecisionTree(minLeafNodeSize=4)
     myTree.fit(XTrain_f,yTrain)
     with open('models/CART2.pkl', 'wb') as f:
         model = pickle.dump(myTree,f)
